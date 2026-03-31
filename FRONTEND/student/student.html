@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body { 
+            margin: 0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #f4f7f6 !important; 
+            display: flex; 
+            filter: none !important; 
+            color: #1e293b; 
+        }
+
+        .sidebar { 
+            width: 260px; 
+            background: #2c3e50; 
+            color: white; 
+            height: 100vh; 
+            position: fixed; 
+            z-index: 1000; 
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar ul { list-style: none; padding: 25px 0; margin: 0; }
+
+        .sidebar li { 
+            padding: 17px 30px; 
+            cursor: pointer; 
+            border-bottom: 1px solid #34495e; 
+            transition: background 0.3s ease;
+            font-size: 1.1rem; 
+            font-weight: 500;
+        }
+
+        .sidebar li:hover { background: #34495e; }
+
+        .content { 
+            margin-left: 260px; 
+            padding: 40px; 
+            width: calc(100% - 260px); 
+            min-height: 100vh;
+            box-sizing: border-box; 
+        }
+
+        .card { 
+            background: white; 
+            padding: 30px; 
+            border-radius: 12px; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08); 
+            margin-bottom: 25px; 
+        }
+
+        .btn { 
+            padding: 12px 25px; 
+            background: #2f85c2; 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600; 
+        }
+
+        table { 
+            width: 100%; 
+            border-collapse: separate; 
+            border-spacing: 0 12px; 
+        }
+
+        th { 
+            background: #e0e7ff; 
+            color: #1e3a8a; 
+            padding: 15px 20px; 
+            text-align: left;
+        }
+
+        td { 
+            background: white; 
+            padding: 15px 20px; 
+            border-bottom: 1px solid #e2e8f0; 
+        }
+
+        .hidden { display: none !important; }
+
+        input {
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 18px;
+        }
+
+        #userGreeting {
+            color: #1e3a8a; 
+            font-size: 2rem; 
+            font-weight: 800; 
+            margin-bottom: 35px; 
+        }
+        
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+        .applied { background: #fff3cd; color: #856404; }
+        .shortlisted { background: #d4edda; color: #155724; }
+        .rejected { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div style="padding: 25px; font-weight: bold; font-size: 1.4rem; text-align: center;">Student Portal</div>
+        <ul>
+            <li onclick="showSection('availableJobsSec')">Available Jobs</li>
+            <li onclick="showSection('appliedJobsSec')">My Applications</li>
+            <li onclick="showSection('viewProfileSec')">My Profile</li>
+            <li onclick="logoutStudent()" style="color: #e74c3c;">Logout</li>
+        </ul>
+    </nav>
+
+    <main class="content">
+        <h1 id="userGreeting">Loading...</h1>
+        
+        <section id="availableJobsSec" class="hidden">
+            <div class="card">
+                <h3>Job Opportunities</h3>
+                <table>
+                    <thead>
+                        <tr><th>Company</th><th>Role</th><th>Package</th><th>Action</th></tr>
+                    </thead>
+                    <tbody id="availableJobs"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="appliedJobsSec" class="hidden">
+            <div class="card">
+                <h3>Your Applications</h3>
+                <table>
+                    <thead>
+                        <tr><th>Company</th><th>Role</th><th>Status</th></tr>
+                    </thead>
+                    <tbody id="appliedList"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="viewProfileSec" class="hidden"></section>
+
+        <section id="profileFormSec" class="hidden">
+    <div class="card">
+        <h3>✏️ Edit Profile Details</h3>
+        <form id="profileForm" enctype="multipart/form-data">
+            <label>Full Name</label>
+            <input type="text" name="name" id="stdName" required>
+            
+            <label>Email Address</label>
+            <input type="email" name="email" id="stdEmail" required>
+            
+            <label>Mobile Number</label>
+            <input type="text" name="phone" id="stdMobile" required>
+            
+            <label>College Name</label>
+            <input type="text" name="collegeName" id="stdCollege">
+            
+            <label>Branch</label>
+            <input type="text" name="branch" id="stdBranch" required>
+            
+            <label>CGPA</label>
+           <input type="number" name="cgpa" id="stdCGPA" step="0.01" required>
+            
+            <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+            
+            <label>New Password (leave blank to keep current)</label>
+            <input type="password" name="password" id="stdPassword" placeholder="Enter new password">
+            
+            <label>Update Resume (PDF only)</label>
+          <input type="file" name="resume" id="stdResume" accept=".pdf">
+            
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="submit" class="btn">Update Profile & Resume</button>
+                <button type="button" class="btn" style="background:#95a5a6;" onclick="showSection('viewProfileSec')">Cancel</button>
+            </div>
+        </form>
+    </div>
+</section>
+    </main>
+
+    <script src="../js/script.js"></script> 
+    
+    <script>
+        // Overriding the local profile form logic to use the correct endpoint from your script.js
+       
+
+        // Helping the initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                window.location.href = 'studenthandler.html';
+            }
+        });
+    </script>
+</body>
+</html>

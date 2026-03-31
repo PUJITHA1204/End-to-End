@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: Arial; margin: 0; background: #f0f5ff; }
+        .navbar { background: #004085; padding: 15px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; cursor: pointer; }
+        .welcome-card { background: white; padding: 30px; margin: 20px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-left: 5px solid #004085; }
+        #contentArea { padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div id="brand">Company Portal</div>
+        <div>
+            <a onclick="loadPostJob()">Post a Job</a>
+            <a onclick="loadPostedJobs()">Posted Jobs</a>
+            <a onclick="logout()">Logout</a>
+        </div>
+    </div>
+
+    <div class="welcome-card">
+        <h2 id="welcomeText">Welcome, HR Manager</h2>
+        <p>Company: <b id="displayCompany"></b></p>
+    </div>
+
+    <div id="contentArea">
+        </div>
+
+    <script>
+        // Security Guard: If no userId is found, immediately redirect to index
+if (!localStorage.getItem('userId')) {
+    window.location.replace('/index.html');
+}
+
+// ... rest of your existing scripts (welcome text, fetch logic, etc.)
+        document.getElementById('welcomeText').innerText = "Welcome, " + localStorage.getItem('userName');
+        document.getElementById('displayCompany').innerText = localStorage.getItem('companyName');
+
+        function loadPostJob() {
+            // Here you would fetch/display your existing job creation HTML
+            window.location.href = 'companyauth.html';
+        }
+
+        async function loadPostedJobs() {
+            // Logic to fetch from /api/jobs and filter by current company
+            window.location.href = 'postedjobs.html';
+        }
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'company.html';
+        }
+    </script>
+</body>
+</html>

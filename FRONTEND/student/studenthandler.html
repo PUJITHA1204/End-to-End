@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Portal - Login & Sign Up</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+    /* --- CORE LAYOUT & RESET --- */
+    :root { 
+        --student-blue: #1e3a8a; 
+        --student-sky: #3b82f6; /* Brighter sky blue */
+        --text-dark: #1e293b; 
+        --bg-color: #f4f7f6; /* Light, clean background */
+        --card-shadow: rgba(0,0,0,0.05);
+        --input-border-focus: #60a5fa;
+        --button-bg: #1e3a8a;
+        --button-hover-bg: #172554;
+    }
+
+    body { 
+        margin: 0; 
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        background: var(--bg-color) !important; 
+        display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        min-height: 100vh; 
+        filter: none !important; 
+        color: var(--text-dark);
+    }
+
+    /* --- COMPONENTS (The Auth Card) --- */
+    .auth-container { 
+        background: white; 
+        padding: 45px; /* More padding */
+        border-radius: 15px; /* More rounded corners */
+        box-shadow: 0 15px 30px var(--card-shadow); /* Deeper shadow */
+        width: 100%; 
+        max-width: 480px; /* Slightly wider */
+        box-sizing: border-box;
+        border: 1px solid #e2e8f0; /* Light border */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .auth-container:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 25px 40px var(--card-shadow);
+    }
+
+    /* Tab Button Styles */
+    .tab-btn {
+        background: none;
+        border: none;
+        padding: 14px 30px; /* Larger buttons */
+        font-size: 17px; /* Larger font */
+        font-weight: 600;
+        cursor: pointer;
+        color: #64748b; /* Softer grey */
+        border-bottom: 4px solid transparent; /* Thicker transparent border */
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+    }
+
+    .active-tab {
+        color: var(--student-blue);
+        border-bottom: 4px solid var(--student-blue); /* Thicker active border */
+    }
+
+    h3 { 
+        color: var(--student-blue); 
+        text-align: center; 
+        margin-bottom: 30px; /* More margin */
+        font-weight: 800; /* Bolder heading */
+        font-size: 2rem; /* Larger heading */
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px; /* More margin */
+        font-weight: 600;
+        color: #334155;
+    }
+
+    /* 3. Input Fields (High Visibility) */
+    input { 
+        width: 100%; 
+        padding: 14px; /* Larger inputs */
+        margin-bottom: 20px; /* More spacing */
+        border: 1px solid #cbd5e1; 
+        border-radius: 8px; /* More rounded */
+        font-size: 15px; 
+        transition: all 0.3s ease; 
+        box-sizing: border-box; 
+        color: var(--text-dark) !important;
+        background-color: #ffffff;
+    }
+
+    input:focus { 
+        border-color: var(--input-border-focus); 
+        outline: none; 
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); /* Softer focus glow */
+    }
+
+    /* 4. Action Button */
+    button[type="submit"] { 
+        width: 100%; 
+        padding: 16px; /* Larger button */
+        background: var(--button-bg); 
+        color: #ffffff !important; 
+        border: none; 
+        border-radius: 10px; /* More rounded */
+        cursor: pointer; 
+        font-weight: 700; /* Bolder text */
+        font-size: 17px; /* Larger font */
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 10px; /* More top margin */
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(30, 58, 138, 0.2);
+    }
+
+    button[type="submit"]:hover { 
+        background: var(--button-hover-bg); 
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(23, 37, 84, 0.25);
+    }
+
+    .hidden { 
+        display: none !important; 
+    }
+
+    /* Table text visibility (Shared with Dashboard) */
+    th { 
+        color: var(--student-blue); 
+        background: #f8fafc; 
+        padding: 15px 20px; /* More padding */
+    }
+    td { 
+        color: #334155; 
+        padding: 15px 20px; /* More padding */
+    }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <div style="text-align: center; margin-bottom: 40px; border-bottom: 1px solid #f1f5f9; padding-bottom: 15px;">
+        <button id="showLogin" class="tab-btn active-tab">Login</button>
+        <button id="showSignup" class="tab-btn">Sign Up</button>
+    </div>
+
+    <form id="studentLoginForm">
+        <h3>Student Login</h3>
+        <label for="logCollege">College Name</label>
+        <input type="text" id="logCollege" placeholder="Enter your college name" required>
+        
+        <label for="logRoll">Roll Number</label>
+        <input type="text" id="logRoll" placeholder="Enter your roll number" required>
+        
+        <label for="logPass">Password</label>
+        <input type="password" id="logPass" placeholder="Enter your password" required>
+        
+        <button type="submit">Login</button>
+    </form>
+
+    <form id="studentSignupForm" class="hidden">
+        <h3>Student Registration</h3>
+        <label for="regName">Full Name</label>
+        <input type="text" id="regName" placeholder="Enter your full name" required>
+        
+        <label for="regCollege">College Name</label>
+        <input type="text" id="regCollege" placeholder="Enter your college name" required>
+        
+        <label for="regRoll">Roll Number</label>
+        <input type="text" id="regRoll" placeholder="Enter your roll number" required>
+        
+        <label for="regEmail">Email ID</label>
+        <input type="email" id="regEmail" placeholder="Enter your email address" required>
+        
+        <label for="regMobile">Mobile Number</label>
+        <input type="text" id="regMobile" placeholder="Enter your mobile number" required pattern="\d{10}" title="Must be exactly 10 digits" maxlength="10">
+        
+        <label for="regPass">Set Strong Password</label>
+        <input type="password" id="regPass" placeholder="Set a strong password" required pattern="(?=.*\d)(?=.*[!@#$%^&*]).{6,}" title="Password must be at least 6 characters, with at least one digit and one special character" minlength="6">
+        
+        <label for="regConfirmPass">Confirm Password</label>
+        <input type="password" id="regConfirmPass" placeholder="Confirm your password" required minlength="6">
+        
+        <button type="submit">Sign Up</button>
+    </form>
+</div>
+
+<script>
+    const loginForm = document.getElementById('studentLoginForm');
+    const signupForm = document.getElementById('studentSignupForm');
+    const loginBtn = document.getElementById('showLogin');
+    const signupBtn = document.getElementById('showSignup');
+
+    loginBtn.onclick = () => {
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+        loginBtn.classList.add('active-tab');
+        signupBtn.classList.remove('active-tab');
+    };
+
+    signupBtn.onclick = () => {
+        signupForm.classList.remove('hidden');
+        loginForm.classList.add('hidden');
+        signupBtn.classList.add('active-tab');
+        loginBtn.classList.remove('active-tab');
+    };
+
+    // Form submission handlers (will be in authhandler.js)
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // ... login logic ...
+    });
+
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // ... signup logic ...
+    });
+</script>
+<script src="../js/authhandler.js"></script>
+</body>
+</html>

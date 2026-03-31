@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Placement Portal</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* --- Admin Specific Attractive Blue Theme --- */
+        body.admin-page {
+            background: #e0e7ff !important; /* Soft, attractive light blue background */
+            margin: 0;
+            padding: 0;
+            color: #1e293b; /* Sets a global dark slate color for text */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Force remove the dark shade/overlay for the admin page */
+        body.admin-page::before {
+            display: none !important;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%); /* Brighter blue gradient */
+            color: white;
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.2); /* Softer shadow */
+            transition: background 0.3s ease;
+        }
+
+        .admin-header:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #93c5fd 100%); /* Slightly deeper blue on hover */
+        }
+
+        .admin-container {
+            background: white;
+            width: 90%;
+            max-width: 1200px; /* Slightly wider container */
+            margin: 35px auto;
+            padding: 30px;
+            border-radius: 15px; /* More rounded corners */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.07); /* Deeper, softer shadow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .admin-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #1e3a8a; /* Consistent deep blue */
+            margin-bottom: 25px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- Table Visibility Fixes --- */
+        table {
+            width: 100%;
+            border-collapse: separate; /* Allows for rounded corners on cells */
+            border-spacing: 0 10px; /* Adds vertical spacing between rows */
+            background: transparent; /* Table background handled by rows/cells */
+            color: #1e293b !important; /* Force dark text for all table content */
+        }
+
+        th {
+            background: #e0e7ff; /* Soft blue header background */
+            color: #1e3a8a; /* Deep blue for headers */
+            padding: 18px 15px;
+            text-align: left;
+            border-bottom: 3px solid #c7d2fe; /* Softer border */
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 18px 15px;
+            background: white; /* White background for data rows */
+            border-bottom: 1px solid #e2e8f0; /* Lighter border */
+            color: #334155 !important; /* Darker grey for the actual data */
+            transition: background-color 0.2s ease;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc; /* Very subtle hover effect */
+        }
+
+        /* Style for buttons inside the table */
+        .admin-container .btn {
+            background: #1e3a8a;
+            color: white !important;
+            padding: 10px 18px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 5px rgba(30, 58, 138, 0.15);
+        }
+
+        .admin-container .btn:hover {
+            background: #172554; /* Darker blue on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(30, 58, 138, 0.25);
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid white;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn:hover {
+            background: white;
+            color: #1e3a8a;
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+            .admin-header div:first-child {
+                margin-bottom: 10px;
+            }
+            .admin-container {
+                width: 95%;
+                margin: 20px auto;
+                padding: 20px;
+            }
+            table, th, td {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body class="admin-page">
+
+<header class="admin-header">
+    <div style="font-size: 1.5rem; font-weight: 900; letter-spacing: 1.5px;">ADMIN PORTAL</div>
+    <div style="display: flex; align-items: center; gap: 25px;">
+        <span id="welcomeMsg" style="font-weight: 500; font-size: 1.1rem; text-shadow: 0 1px 2px rgba(0,0,0,0.1);"></span>
+        <button onclick="adminLogout()" class="logout-btn">Logout</button>
+    </div>
+</header>
+
+<div class="admin-container">
+    <h2>Job Offers Overview</h2>
+    <table>
+        <thead>
+    <tr>
+        <th>Company</th>
+        <th>Job Role</th>
+        <th>Exam Date</th>
+        <th>Applied</th>
+        </tr>
+</thead>
+<tbody id="jobData">
+    </tbody>
+
+<script src="../js/script.js"></script> <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // 1. Security Check: Redirect if not logged in
+        const adminData = JSON.parse(localStorage.getItem('adminUser'));
+        if (!adminData) {
+            alert("Access Denied. Please Login.");
+            window.location.href = "../index.html";
+            return;
+        }
+
+        // 2. Set Welcome Message
+        document.getElementById('welcomeMsg').innerText = `Welcome, ${adminData.name || 'Admin'}`;
+
+        // 3. Load the data
+        fetchAdminTableData();
+    });
+
+    // 4. Update the Data Fetching Logic
+    async function fetchAdminTableData() {
+        try {
+            const response = await fetch('/api/jobs/all');
+            const jobs = await response.json();
+            const container = document.getElementById('jobData');
+
+            if (!jobs || jobs.length === 0) {
+                container.innerHTML = '<tr><td colspan="4" style="text-align:center;">No job postings found.</td></tr>';
+                return;
+            }
+
+            container.innerHTML = jobs.map(job => {
+                // Calculate applicant count from the 'applicants' array sent by your backend
+                const count = job.applicants ? job.applicants.length : 0;
+                
+                return `
+                    <tr>
+                        <td><strong>${job.companyName}</strong></td>
+                        <td>${job.jobRole}</td>
+                        <td>${job.examDate ? new Date(job.examDate).toLocaleDateString() : 'TBD'}</td>
+                        <td>
+                            <span style="background:#dcfce7; color:#166534; padding:6px 12px; border-radius:20px; font-size:0.85rem; font-weight:bold; cursor:pointer;" onclick="viewApplicants('${job._id}')">
+                                ${count} Applied
+                            </span>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        } catch (err) {
+            console.error("Error fetching jobs:", err);
+            document.getElementById('jobData').innerHTML = '<tr><td colspan="4" style="text-align:center; color:red;">Failed to load data.</td></tr>';
+        }
+    }
+
+    // 5. Connect the Logout Button
+    function adminLogout() {
+        // We call the function from your script.js
+        if(typeof logoutAdmin === "function") {
+            logoutAdmin();
+        } else {
+            // Fallback if script.js isn't loaded
+            localStorage.clear();
+            window.location.href = "../index.html";
+        }
+    }
+</script>
+</body>
+</html>

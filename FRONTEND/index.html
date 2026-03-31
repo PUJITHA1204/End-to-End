@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Campus Placement System</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body { 
+            background: url("images/placement.jpg") no-repeat center center/cover; 
+            margin: 0;
+            height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white; /* Default text color for overlay */
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3); /* Subtle shadow for readability */
+            position: relative; /* For pseudo-element overlay */
+        }
+
+        /* Overlay for better text readability */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 40, 133, 0.5); /* Semi-transparent dark blue overlay */
+            z-index: 1;
+        }
+
+        .container {
+            position: relative; /* To ensure it's above the overlay */
+            z-index: 2;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1); /* Subtle background for container */
+            padding: 50px; /* Generous padding */
+            border-radius: 20px; /* More rounded corners */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            max-width: 700px; /* Wider container */
+            width: 90%;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .container:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            font-size: 3rem; /* Larger heading */
+            margin-bottom: 20px;
+            font-weight: 900; /* Extra bold */
+            letter-spacing: 1.5px;
+        }
+
+        .quote {
+            font-size: 1.3rem; /* Larger quote */
+            font-style: italic;
+            margin-bottom: 40px; /* More space below quote */
+            line-height: 1.6;
+        }
+
+        .container > div {
+            display: flex;
+            justify-content: center;
+            gap: 25px; /* Spacing between buttons */
+            margin-top: 30px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px; /* Larger buttons */
+            font-size: 1.2rem; /* Larger font */
+            font-weight: 700; /* Bold */
+            text-decoration: none;
+            color: white;
+            background: #004085; /* Deep blue */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 5px 15px rgba(0, 64, 133, 0.2);
+            transition: all 0.3s ease;
+            border: none; /* Ensure no default border */
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #007bff; /* Sky blue on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+        }
+    </style>
+</head>
+<body class="landing">
+
+<div class="container">
+    <h1>Campus Placement Management System</h1>
+
+    <p class="quote">
+        “Success is where preparation and opportunity meet.”
+    </p>
+
+    <div>
+        <a href="/student/studenthandler.html" class="btn">Student</a>
+        <a href="/company/company.html" class="btn">Company</a>
+        <a href="/admin/adminauth.html" class="btn">Admin</a>
+    </div>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>

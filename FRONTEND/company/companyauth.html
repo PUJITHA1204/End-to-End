@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Company Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* Added styles for a softer, more attractive look */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0e7ff 0%, #f0f9ff 100%); /* Soft blue gradient */
+            margin: 0;
+            padding: 20px;
+            color: #1e293b;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 500px; /* Slightly wider container */
+            margin: 40px auto; /* More vertical margin */
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+        }
+        h2 {
+            color: #1e3a8a; /* Deep blue */
+            margin-bottom: 30px;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Increased spacing */
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="password"] {
+            width: 100%;
+            padding: 15px; /* Larger padding */
+            border: 1px solid #c7d2fe; /* Soft blue border */
+            border-radius: 8px;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        input[type="password"]:focus {
+            border-color: #60a5fa; /* Sky blue on focus */
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15);
+        }
+        button.btn {
+            background: #2e4a9e; /* Professional navy blue */
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        button.btn:hover {
+            background: #1e3a8a; /* Darker blue on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 58, 138, 0.2);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Company Job Posting</h2>
+   <form id="jobForm">
+    <input type="text" id="companyName" placeholder="Company Name" readonly> <!-- Readonly for consistency -->
+    <input type="text" id="jobRole" placeholder="Job Role" required>
+    
+    <input type="number" id="minCGPA" step="0.01" placeholder="Minimum CGPA (e.g. 8.0)" required>
+    
+    <input type="date" id="examDate" required>
+    <input type="text" id="package" placeholder="Package (e.g. 6 LPA)" required>
+    
+    <input type="text" id="keywords" placeholder="Required Skills (Comma separated: Java, React, SQL)" required>
+    
+    <button class="btn" type="submit">Post Job</button>
+</form>
+</div>
+<script src="../js/script.js"></script>
+
+<script>
+    // Pre-fill company name from localStorage
+    const companyNameInput = document.getElementById('companyName');
+    const storedCompany = localStorage.getItem('companyName');
+    
+    if (storedCompany) {
+        companyNameInput.value = storedCompany;
+    } else {
+        window.location.href = 'company.html'; 
+    }
+
+    // The form submission is now handled exclusively by script.js
+    // No need for a second 'submit' listener here!
+</script>
+</body>
+</html>

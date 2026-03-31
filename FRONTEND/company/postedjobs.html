@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Posted Jobs | Company Portal</title>
+    <style>
+        :root { --blue: #004085; --sky: #007bff; --bg: #f0f5ff; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        .header { display: flex; justify-content: space-between; align-items: center; background: var(--blue); color: white; padding: 15px 30px; border-radius: 10px; margin-bottom: 30px; }
+        .header a { color: white; text-decoration: none; font-weight: bold; border: 1px solid white; padding: 8px 15px; border-radius: 5px; }
+        
+        .job-card { background: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); margin-bottom: 20px; overflow: hidden; border-left: 6px solid var(--blue); }
+        .job-header { padding: 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: #fff; }
+        .job-header:hover { background: #f9f9f9; }
+        .job-title { font-size: 1.2rem; font-weight: bold; color: var(--blue); }
+        
+        .applicant-section { padding: 20px; border-top: 1px solid #eee; display: none; background: #fafafa; }
+        .active { display: block; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
+        th { background: #e9ecef; color: #333; text-align: left; padding: 12px; border-bottom: 2px solid #dee2e6; }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
+        
+        .btn-delete { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; float: right; margin-left: 10px; }
+        .btn-delete:hover { background: #a71d2a; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>Posted Jobs & Applicants</h1>
+        <a href="companyprofile.html">Back to Dashboard</a>
+    </div>
+
+    <div id="jobsList">
+        <p style="text-align:center;">Loading your posted jobs...</p>
+    </div>
+
+   <script src="../js/script.js"></script>
+
+    <script>
+        async function fetchJobs() {
+            const companyId = localStorage.getItem('userId');
+            if (!companyId) return;
+
+            try {
+                const res = await fetch(`/api/jobs/company-jobs/${companyId}`);
+                const jobs = await res.json();
+                const list = document.getElementById('jobsList');
+
+                if (!jobs || jobs.length === 0) {
+                    list.innerHTML = "<div class='job-card' style='padding:20px; text-align:center;'>No jobs posted yet.</div>";
+                    return;
+                }
+
+                list.innerHTML = jobs.map(job => `
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div onclick="toggleApplicants('${job._id}')" style="flex-grow: 1;">
+                                <span class="job-title">${job.jobRole}</span><br>
+                                <small>Package: ${job.package} | Required CGPA: ${job.minCGPA}</small>
+                            </div>
+                            <div>
+                                <b>${job.applicants ? job.applicants.length : 0} Applicants</b>
+                                <button class="btn-delete" onclick="deleteJob('${job._id}')">Delete Job</button>
+                            </div>
+                        </div>
+                        <div id="apps-${job._id}" class="applicant-section">
+                            <h4>Applicants for ${job.jobRole}</h4>
+                            ${renderApplicantsTable(job.applicants)}
+                        </div>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error("Error fetching jobs:", err);
+                document.getElementById('jobsList').innerHTML = "Error loading jobs.";
+            }
+        }
+
+        function renderApplicantsTable(applicants) {
+            if (!applicants || applicants.length === 0) return "<p>No one has applied yet.</p>";
+            
+            return `
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>CGPA</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${applicants.map(app => `
+                            <tr>
+                                <td>${app.userId ? app.userId.name : 'N/A'}</td>
+                                <td>${app.userId ? app.userId.email : 'N/A'}</td>
+                                <td>${app.cgpa || 'N/A'}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        function toggleApplicants(id) {
+            const section = document.getElementById(`apps-${id}`);
+            section.classList.toggle('active');
+        }
+
+        // Initialize only if logged in
+        if (!localStorage.getItem('userId')) {
+            window.location.href = 'index.html';
+        } else {
+            fetchJobs();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Company Portal | Login & Signup</title>
+    <style>
+        :root { --blue: #004085; --sky: #007bff; --bg: #eaf2ff; --card-shadow: rgba(0,64,133,0.1); --button-hover-bg: #0056b3; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            color: #1e293b;
+        }
+        .auth-card { 
+            background: white; 
+            padding: 45px; 
+            border-radius: 15px; 
+            box-shadow: 0 15px 35px var(--card-shadow); 
+            width: 100%; 
+            max-width: 450px; 
+            border-top: 6px solid var(--blue); /* Thicker top border */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .auth-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 45px var(--card-shadow);
+        }
+        h2 { 
+            color: var(--blue); 
+            text-align: center; 
+            margin-bottom: 25px; 
+            font-weight: 700;
+            font-size: 1.8rem;
+        }
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            margin: 10px 0; /* Adjusted margin */
+            border: 1px solid #d0d9e8; /* Softer border */
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            font-size: 15px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        input:focus {
+            border-color: var(--sky);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
+        }
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            background: var(--blue); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            transition: all 0.3s ease;
+            font-weight: 600;
+            margin-top: 15px;
+            letter-spacing: 0.5px;
+        }
+        button:hover { 
+            background: var(--button-hover-bg); 
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 86, 179, 0.2);
+        }
+        .toggle-btn { 
+            text-align: center; 
+            margin-top: 25px; /* Increased margin */
+            color: var(--sky); 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 15px;
+            transition: color 0.3s ease;
+        }
+        .toggle-btn:hover {
+            color: #0056b3;
+        }
+        .hidden { 
+            display: none; 
+        }
+        hr { 
+            border: 0; 
+            border-top: 1px solid #eee; 
+            margin: 30px 0; /* Increased margin */
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <div id="loginSection">
+            <h2>Company Login</h2>
+            <input type="text" id="lCompany" placeholder="Company Name" required>
+            <input type="text" id="lPersonId" placeholder="Person ID" required>
+            <input type="password" id="lPass" placeholder="Password" required>
+            <button onclick="handleLogin()">Login</button>
+            <p class="toggle-btn">New Company? <span onclick="toggle()">Register Here</span></p>
+        </div>
+
+        <div id="signupSection" class="hidden">
+            <h2>Company Registration</h2>
+            <input type="text" id="sCompany" placeholder="Company Name" required>
+            <input type="email" id="sCMail" placeholder="Company Email" required>
+            <input type="text" id="sCContact" placeholder="Company Contact" required maxlength="10">
+            <hr>
+            <input type="text" id="sHRName" placeholder="Selection Handler Name" required>
+            <input type="text" id="sPersonId" placeholder="Your ID in Company" required>
+            <input type="email" id="sPMail" placeholder="Person Email ID" required>
+            <input type="text" id="sPContact" placeholder="Person Contact" required maxlength="10">
+            <input type="password" id="sPass" placeholder="Password" required minlength="6">
+            <input type="password" id="sConf" placeholder="Confirm Password" required minlength="6">
+            <button onclick="handleSignup()">Sign Up</button>
+            <p class="toggle-btn">Already have an account? <span onclick="toggle()">Login</span></p>
+        </div>
+    </div>
+
+    <script>
+        window.onload = function() {
+    // If they are already logged in, don't let them stay on the login page
+    if (localStorage.getItem('userId')) {
+        window.location.replace('companyprofile.html');
+    }
+};
+        function toggle() {
+            document.getElementById('loginSection').classList.toggle('hidden');
+            document.getElementById('signupSection').classList.toggle('hidden');
+        }
+
+        async function handleSignup() {
+            const contactC = document.getElementById('sCContact').value;
+            const contactP = document.getElementById('sPContact').value;
+            const password = document.getElementById('sPass').value;
+            const confirm = document.getElementById('sConf').value;
+
+            if (!/^\d{10}$/.test(contactC) || !/^\d{10}$/.test(contactP)) {
+                return alert("Contact numbers must be exactly 10 digits!");
+            }
+
+            if (!/^(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/.test(password)) {
+                return alert("Password must be at least 6 characters long, with at least one digit and one special character!");
+            }
+
+            if (password !== confirm) return alert("Passwords do not match!");
+
+            const res = await fetch('/api/auth/company-register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    companyName: document.getElementById('sCompany').value,
+                    companyMail: document.getElementById('sCMail').value,
+                    companyContact: document.getElementById('sCContact').value,
+                    hrName: document.getElementById('sHRName').value,
+                    personId: document.getElementById('sPersonId').value,
+                    personMail: document.getElementById('sPMail').value,
+                    personContact: document.getElementById('sPContact').value,
+                    password: password
+                })
+            });
+            const data = await res.json();
+            alert(data.message);
+            if (res.ok) toggle();
+        }
+
+        async function handleLogin() {
+            const res = await fetch('/api/auth/company-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    companyName: document.getElementById('lCompany').value,
+                    personId: document.getElementById('lPersonId').value,
+                    password: document.getElementById('lPass').value
+                })
+            });
+            const data = await res.json();
+            if (res.ok) {
+                localStorage.setItem('userId', data.userId);
+                localStorage.setItem('userName', data.name);
+                localStorage.setItem('companyName', data.company);
+                window.location.href = 'companyprofile.html';
+            } else {
+                alert(data.message);
+            }
+        }
+    </script>
+</body>
+</html>

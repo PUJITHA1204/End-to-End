@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Portal | Secure Access</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        :root { --admin-blue: #1e3a8a; --admin-sky: #3b82f6; }
+        body { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        .auth-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); width: 100%; max-width: 450px; }
+        h2 { color: var(--admin-blue); text-align: center; margin-bottom: 25px; font-weight: 700; }
+        .form-group { margin-bottom: 15px; }
+        input { width: 100%; padding: 12px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 14px; transition: 0.3s; box-sizing: border-box; color: #1e293b; }
+        input:focus { border-color: var(--admin-sky); outline: none; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+        .btn-primary { width: 100%; padding: 12px; background: var(--admin-blue); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 16px; margin-top: 10px; transition: 0.2s; }
+        .btn-primary:hover { background: #172554; }
+        
+        /* The requested toggle-link styles */
+        .toggle-link { 
+            text-align: center; 
+            margin-top: 25px; 
+            font-size: 15px; 
+            color: #475569; /* Changed to slate-600 because it sits inside a white card */
+        }
+
+        .toggle-link span { 
+            color: var(--admin-blue); 
+            cursor: pointer; 
+            font-weight: 800; 
+            text-decoration: underline; 
+            padding: 5px;
+            transition: 0.3s;
+        }
+
+        .toggle-link span:hover { 
+            color: var(--admin-sky); 
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="auth-card">
+        <h2 id="authTitle">Admin Login</h2>
+        <form id="adminAuthForm">
+            <div class="form-group">
+                <input type="text" id="admCollege" placeholder="College Name" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="admId" placeholder="College ID" required>
+            </div>
+            
+            <div id="signupFields" class="hidden">
+                <div class="form-group"><input type="text" id="admName" placeholder="Full Name"></div>
+                <div class="form-group"><input type="text" id="admRole" placeholder="Role/Designation (e.g., Principal)"></div>
+                <div class="form-group"><input type="text" id="admContact" placeholder="Contact Number" maxlength="10"></div>
+                <div class="form-group"><input type="email" id="admEmail" placeholder="Email Address"></div>
+                <div class="form-group"><input type="password" id="admConfirmPass" placeholder="Password" minlength="6"></div>
+            </div>
+
+            <div class="form-group">
+                <input type="password" id="admPass" placeholder="Conform  Password" required>
+            </div>
+            
+            <button type="submit" id="authBtn" class="btn-primary">Login</button>
+            
+            <div class="toggle-link" id="toggleArea">
+                Don't have an account? <span onclick="toggleAuth()">Sign Up</span>
+            </div>
+        </form>
+    </div>
+
+    <script>
+    let isSignup = false;
+
+    function toggleAuth() {
+        isSignup = !isSignup;
+        const signupFields = document.getElementById('signupFields');
+        const inputs = signupFields.querySelectorAll('input');
+        
+        signupFields.classList.toggle('hidden');
+        
+        inputs.forEach(input => {
+            input.required = isSignup;
+        });
+
+        document.getElementById('authTitle').innerText = isSignup ? "Admin Registration" : "Admin Login";
+        document.getElementById('authBtn').innerText = isSignup ? "Create Account" : "Login";
+        document.getElementById('toggleArea').innerHTML = isSignup ? 
+            'Already have an account? <span onclick="toggleAuth()">Login</span>' : 
+            'Don\'t have an account? <span onclick="toggleAuth()">Sign Up</span>';
+    }
+
+    document.getElementById('adminAuthForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const password = document.getElementById('admPass').value;
+        
+        if (isSignup) {
+            const contact = document.getElementById('admContact').value;
+            if (!/^\d{10}$/.test(contact)) {
+                return alert("Contact number must be exactly 10 digits!");
+            }
+            if (!/^(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/.test(password)) {
+                return alert("Password must be at least 6 characters long, with at least one digit and one special character!");
+            }
+            if (password !== document.getElementById('admConfirmPass').value) {
+                return alert("Passwords do not match!");
+            }
+        }
+
+        const payload = {
+            collegeName: document.getElementById('admCollege').value,
+            collegeId: document.getElementById('admId').value,
+            password: password,
+            role: 'admin'
+        };
+
+        if (isSignup) {
+            payload.name = document.getElementById('admName').value;
+            payload.designation = document.getElementById('admRole').value;
+            payload.mobileNumber = document.getElementById('admContact').value;
+            payload.email = document.getElementById('admEmail').value;
+        }
+
+        // Change this line in your adminauth.html script
+const endpoint = isSignup ? '/api/auth/admin-register' : '/api/auth/admin-login';
+        
+        try {
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await res.json();
+
+            if (res.ok) {
+                if (isSignup) {
+                    alert("Registration successful! Please login.");
+                    toggleAuth(); 
+                } else {
+                    // Critical Fix: Store the token for the auth.js middleware
+                    localStorage.setItem('authToken', result.token); 
+                    
+                    localStorage.setItem('adminUser', JSON.stringify({
+                        name: result.name || payload.name,
+                        id: result.userId
+                    }));
+                    window.location.href = "admin.html";
+                }
+            } else {
+                alert(result.message || "An error occurred");
+            }
+        } catch (error) {
+            console.error("Auth Error:", error);
+            alert("Connection failed. Please check if your server is running.");
+        }
+    });
+</script>
+</body>
+</html>
