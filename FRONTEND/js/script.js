@@ -90,7 +90,7 @@ if (window.location.pathname.includes('postedjobs.html')) {
     const container = document.getElementById('companyJobData'); 
     
     if (container && companyId) {
-        fetch(`/api/jobs/company-jobs/${companyId}`)
+        fetch(`https://end-to-end-1110.onrender.com/api/jobs/company-jobs/${companyId}`)
             .then(res => res.json())
             .then(jobs => {
                 if (jobs.length === 0) {
@@ -126,7 +126,7 @@ if (window.location.pathname.includes('postedjobs.html')) {
 // ==========================================
 async function initDashboard(userId) {
     try {
-        const res = await fetch(`/api/auth/profile/${userId}`);
+        const res = await fetch(`https://end-to-end-1110.onrender.com/api/auth/profile/${userId}`);
         const user = await res.json();
         window.currentUser = user; 
         
@@ -158,7 +158,7 @@ function renderProfileCard(user) {
                 <p><strong>College:</strong> ${user.collegeName || 'Not Provided'}</p>
                 <p><strong>Branch:</strong> ${user.branch || 'Not Provided'}</p>
                 <p><strong>CGPA:</strong> ${user.cgpa || 'Not Provided'}</p>
-                <p><strong>Resume:</strong> <a href="/${user.resumePath}" target="_blank" class="resume-link">📄 View Current Resume</a></p>
+                <p><strong>Resume:</strong> <a href="https://end-to-end-1110.onrender.com/${user.resumePath}" target="_blank" class="resume-link">📄 View Current Resume</a></p>
                 <hr>
                 <button class="btn" onclick="prepareEditForm()">Edit All Details / Change Password</button>
             </div>
@@ -170,7 +170,7 @@ async function loadJobs(container) {
     if (!container) return;
     try {
         // Fetch all jobs from the server
-        const response = await fetch('/api/jobs/all'); 
+        const response = await fetch('https://end-to-end-1110.onrender.com/api/jobs/all'); 
         const jobs = await response.json();
         
         container.innerHTML = jobs.map(job => {
@@ -242,7 +242,7 @@ window.handleApply = async function(event, jobId) {
     btn.disabled = true;
 
     try {
-        const res = await fetch('/api/jobs/apply', {
+        const res = await fetch('https://end-to-end-1110.onrender.com/api/jobs/apply', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
@@ -279,7 +279,7 @@ async function loadAppliedJobs() {
     const container = document.getElementById('appliedList');
     if (!container || !userId) return;
     try {
-        const res = await fetch(`/api/jobs/applied/${userId}`);
+        const res = await fetch(`https://end-to-end-1110.onrender.com/api/jobs/applied/${userId}`);
         const apps = await res.json();
         if (apps.length === 0) {
             container.innerHTML = '<tr><td colspan="3">You haven\'t applied to any jobs yet.</td></tr>';
@@ -307,7 +307,7 @@ function setupProfileUpdate() {
         const formData = new FormData(profileForm);
 
         try {
-            const response = await fetch(`/api/auth/update-profile/${userId}`, {
+            const response = await fetch(`https://end-to-end-1110.onrender.com/api/auth/update-profile/${userId}`, {
                 method: 'POST',
                 body: formData // CRITICAL: No headers! Let the browser set them for files.
             });
@@ -369,7 +369,7 @@ function setupJobPosting(jobForm) {
         };
 
         try {
-            const response = await fetch('/api/jobs/create', {
+            const response = await fetch('https://end-to-end-1110.onrender.com/api/jobs/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(jobData)
@@ -403,7 +403,7 @@ window.deleteJob = async function(jobId) {
     if (!confirm("Are you sure? This will delete the job and all student applications.")) return;
     
     try {
-        const res = await fetch(`/api/jobs/${jobId}`, { 
+        const res = await fetch(`https://end-to-end-1110.onrender.com/api/jobs/${jobId}`, { 
             method: 'DELETE' 
         });
 
@@ -425,7 +425,7 @@ window.deleteJob = async function(jobId) {
 // ==========================================
 window.viewApplicants = async function(jobId) {
     try {
-        const response = await fetch(`/api/jobs/applicants/${jobId}`);
+        const response = await fetch(`https://end-to-end-1110.onrender.com/api/jobs/applicants/${jobId}`);
         const applications = await response.json();
 
         // Build HTML for the table rows
@@ -445,8 +445,8 @@ window.viewApplicants = async function(jobId) {
                         <td>${s.email || 'N/A'}</td>
                         <td>
                             ${s.resumePath 
-                                ? `<a href="/${s.resumePath}" target="_blank" style="color:#2563eb; text-decoration:underline;">View Resume</a>` 
-                                : 'No Resume'}
+    ? `<a href="https://end-to-end-1110.onrender.com/${s.resumePath}" target="_blank">View Resume</a>` 
+    : 'No Resume'}
                         </td>
                     </tr>
                 `;

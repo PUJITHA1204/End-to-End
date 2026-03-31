@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 role: 'student'
             };
 
-            const response = await fetch('/api/auth/register', {
+            const response = await fetch('https://end-to-end-1110.onrender.com/api/auth/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(studentData)
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 password: document.getElementById('logPass').value
             };
 
-            const response = await fetch('/api/auth/student-login', {
+            const response = await fetch('https://end-to-end-1110.onrender.com/api/auth/student-login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(loginData)
